@@ -72,10 +72,10 @@ function initHeroCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Draw multiple wave layers with slightly faster speeds
-        drawWave(canvas.height * 0.5, 60, 0.003, 1.0, 'rgba(0, 113, 227, 0.15)', 2);
-        drawWave(canvas.height * 0.55, 40, 0.004, 1.2, 'rgba(0, 113, 227, 0.12)', 1.5);
-        drawWave(canvas.height * 0.6, 80, 0.002, 0.8, 'rgba(0, 198, 255, 0.08)', 2.5);
-        drawWave(canvas.height * 0.45, 30, 0.005, 1.4, 'rgba(124, 58, 237, 0.1)', 1);
+        drawWave(canvas.height * 0.5, 60, 0.003, 1.0, 'rgba(0, 113, 227, 0.25)', 2);
+        drawWave(canvas.height * 0.55, 40, 0.004, 1.2, 'rgba(0, 113, 227, 0.2)', 1.5);
+        drawWave(canvas.height * 0.6, 80, 0.002, 0.8, 'rgba(0, 198, 255, 0.15)', 2.5);
+        drawWave(canvas.height * 0.45, 30, 0.005, 1.4, 'rgba(124, 58, 237, 0.18)', 1);
 
         // Draw floating particles
         drawParticles();
