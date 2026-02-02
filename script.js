@@ -1,171 +1,152 @@
 /* ============================================
-   APEX AI - JavaScript
-   Enhanced with animated canvas backgrounds
+   APEX AI - Premium JavaScript
+   Particle mesh, cursor effects, and premium animations
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize all functionality
-    initHeroCanvas();
-    initCTACanvas();
+    initParticleMesh();
+    initAmbientCanvas();
+    initCursorGlow();
     initFadeInAnimations();
     initSmoothScroll();
     initMobileMenu();
     initMobileStickyCTA();
+    initCounterAnimation();
 });
 
 /**
- * Animated waveform canvas for hero section
+ * Particle mesh network animation for hero
+ * Creates connected nodes that form neural pathway patterns
  */
-function initHeroCanvas() {
-    const canvas = document.getElementById('hero-canvas');
+function initParticleMesh() {
+    const canvas = document.getElementById('particle-canvas');
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     let animationId;
-    let time = 0;
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 150 };
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        initParticles();
     }
 
-    function drawWave(yOffset, amplitude, frequency, speed, color, lineWidth) {
-        ctx.beginPath();
-        ctx.strokeStyle = color;
-        ctx.lineWidth = lineWidth;
+    function initParticles() {
+        particles = [];
+        const numParticles = Math.min(Math.floor((canvas.width * canvas.height) / 15000), 80);
 
-        for (let x = 0; x <= canvas.width; x += 2) {
-            const y = yOffset +
-                Math.sin((x * frequency) + (time * speed)) * amplitude +
-                Math.sin((x * frequency * 0.5) + (time * speed * 0.7)) * (amplitude * 0.5);
-
-            if (x === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
+        for (let i = 0; i < numParticles; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                baseX: Math.random() * canvas.width,
+                baseY: Math.random() * canvas.height,
+                size: Math.random() * 2 + 1,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.3,
+                opacity: Math.random() * 0.5 + 0.2
+            });
         }
-
-        ctx.stroke();
     }
 
     function drawParticles() {
-        const particleCount = Math.floor(canvas.width / 50);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (let i = 0; i < particleCount; i++) {
-            const x = (i / particleCount) * canvas.width + Math.sin(time * 0.5 + i) * 30;
-            const y = canvas.height * 0.3 + Math.sin(time * 0.3 + i * 0.5) * 100;
-            const size = 1 + Math.sin(time + i) * 0.5;
-            const alpha = 0.2 + Math.sin(time * 0.5 + i) * 0.15;
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
 
-            ctx.beginPath();
-            ctx.arc(x, y, size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 113, 227, ${alpha})`;
-            ctx.fill();
+                if (distance < 150) {
+                    const opacity = (1 - distance / 150) * 0.15;
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(0, 113, 227, ${opacity})`;
+                    ctx.lineWidth = 1;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
         }
+
+        // Draw particles
+        particles.forEach(particle => {
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 113, 227, ${particle.opacity})`;
+            ctx.fill();
+
+            // Glow effect
+            const gradient = ctx.createRadialGradient(
+                particle.x, particle.y, 0,
+                particle.x, particle.y, particle.size * 3
+            );
+            gradient.addColorStop(0, `rgba(0, 113, 227, ${particle.opacity * 0.3})`);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    function updateParticles() {
+        particles.forEach(particle => {
+            // Floating movement
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+
+            // Mouse interaction
+            if (mouse.x !== null && mouse.y !== null) {
+                const dx = mouse.x - particle.x;
+                const dy = mouse.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius) {
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    particle.x -= dx * force * 0.02;
+                    particle.y -= dy * force * 0.02;
+                }
+            }
+
+            // Bounce off edges with padding
+            if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+            if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+
+            // Keep in bounds
+            particle.x = Math.max(0, Math.min(canvas.width, particle.x));
+            particle.y = Math.max(0, Math.min(canvas.height, particle.y));
+        });
     }
 
     function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw multiple wave layers
-        drawWave(canvas.height * 0.5, 60, 0.003, 0.8, 'rgba(0, 113, 227, 0.15)', 2);
-        drawWave(canvas.height * 0.55, 40, 0.004, 1.0, 'rgba(0, 113, 227, 0.12)', 1.5);
-        drawWave(canvas.height * 0.6, 80, 0.002, 0.6, 'rgba(0, 198, 255, 0.08)', 2.5);
-        drawWave(canvas.height * 0.45, 30, 0.005, 1.2, 'rgba(124, 58, 237, 0.1)', 1);
-
-        // Draw floating particles
         drawParticles();
-
-        // Draw gradient glow at center
-        const gradient = ctx.createRadialGradient(
-            canvas.width / 2, canvas.height * 0.4, 0,
-            canvas.width / 2, canvas.height * 0.4, canvas.width * 0.4
-        );
-        gradient.addColorStop(0, 'rgba(0, 113, 227, 0.08)');
-        gradient.addColorStop(0.5, 'rgba(0, 113, 227, 0.03)');
-        gradient.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        time += 0.015;
+        updateParticles();
         animationId = requestAnimationFrame(animate);
     }
 
-    // Handle resize
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
-
-    // Pause animation when not visible
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                if (!animationId) animate();
-            } else {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-            }
-        });
+    // Mouse tracking
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
     });
 
-    observer.observe(canvas);
-}
+    canvas.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
 
-/**
- * Animated waveform canvas for CTA section
- */
-function initCTACanvas() {
-    const canvas = document.getElementById('cta-canvas');
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let animationId;
-    let time = 0;
-
-    function resize() {
-        const container = canvas.parentElement;
-        canvas.width = container.offsetWidth;
-        canvas.height = container.offsetHeight;
-    }
-
-    function drawWave(yOffset, amplitude, frequency, speed, color, lineWidth) {
-        ctx.beginPath();
-        ctx.strokeStyle = color;
-        ctx.lineWidth = lineWidth;
-
-        for (let x = 0; x <= canvas.width; x += 2) {
-            const y = yOffset +
-                Math.sin((x * frequency) + (time * speed)) * amplitude +
-                Math.sin((x * frequency * 0.7) + (time * speed * 1.3)) * (amplitude * 0.3);
-
-            if (x === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-
-        ctx.stroke();
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw wave layers
-        drawWave(canvas.height * 0.6, 50, 0.004, 0.6, 'rgba(0, 113, 227, 0.2)', 2);
-        drawWave(canvas.height * 0.5, 30, 0.005, 0.8, 'rgba(0, 198, 255, 0.15)', 1.5);
-        drawWave(canvas.height * 0.7, 40, 0.003, 0.5, 'rgba(124, 58, 237, 0.12)', 2);
-
-        time += 0.01;
-        animationId = requestAnimationFrame(animate);
-    }
-
-    window.addEventListener('resize', resize);
+    // Handle resize
+    window.addEventListener('resize', debounce(resize, 250));
     resize();
 
-    // Only start animation when visible
+    // Visibility optimization
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -177,9 +158,117 @@ function initCTACanvas() {
                 }
             }
         });
-    }, { threshold: 0.1 });
+    });
 
     observer.observe(canvas);
+    animate();
+}
+
+/**
+ * Ambient canvas for guarantee and CTA sections
+ * Subtle flowing lines
+ */
+function initAmbientCanvas() {
+    const canvases = ['guarantee-canvas', 'cta-canvas'];
+
+    canvases.forEach(canvasId => {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let animationId;
+        let time = 0;
+
+        function resize() {
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+        }
+
+        function drawWave(yOffset, amplitude, frequency, speed, color, lineWidth) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+
+            for (let x = 0; x <= canvas.width; x += 3) {
+                const y = yOffset +
+                    Math.sin((x * frequency) + (time * speed)) * amplitude +
+                    Math.sin((x * frequency * 0.6) + (time * speed * 1.4)) * (amplitude * 0.4);
+
+                if (x === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw flowing lines
+            drawWave(canvas.height * 0.3, 40, 0.003, 0.4, 'rgba(0, 113, 227, 0.08)', 1.5);
+            drawWave(canvas.height * 0.5, 60, 0.002, 0.3, 'rgba(0, 113, 227, 0.06)', 2);
+            drawWave(canvas.height * 0.7, 35, 0.004, 0.5, 'rgba(124, 58, 237, 0.05)', 1.5);
+
+            time += 0.008;
+            animationId = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', debounce(resize, 250));
+        resize();
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!animationId) animate();
+                } else {
+                    if (animationId) {
+                        cancelAnimationFrame(animationId);
+                        animationId = null;
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observer.observe(canvas);
+    });
+}
+
+/**
+ * Cursor glow effect that follows mouse
+ */
+function initCursorGlow() {
+    const glow = document.getElementById('cursor-glow');
+    if (!glow) return;
+
+    // Only on desktop
+    if (window.innerWidth <= 768) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animate() {
+        // Smooth follow
+        currentX += (mouseX - currentX) * 0.1;
+        currentY += (mouseY - currentY) * 0.1;
+
+        glow.style.left = currentX + 'px';
+        glow.style.top = currentY + 'px';
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
 }
 
 /**
@@ -192,7 +281,7 @@ function initFadeInAnimations() {
 
     const observerOptions = {
         root: null,
-        rootMargin: '0px 0px -80px 0px',
+        rootMargin: '0px 0px -60px 0px',
         threshold: 0.1
     };
 
@@ -206,9 +295,48 @@ function initFadeInAnimations() {
     }, observerOptions);
 
     fadeElements.forEach((element, index) => {
-        // Stagger animation delay
-        element.style.transitionDelay = `${index % 5 * 0.1}s`;
+        // Stagger animation delay within each section
+        const sectionElements = element.closest('.section, .hero')?.querySelectorAll('.fade-in');
+        if (sectionElements) {
+            const indexInSection = Array.from(sectionElements).indexOf(element);
+            element.style.transitionDelay = `${indexInSection * 0.1}s`;
+        }
         observer.observe(element);
+    });
+}
+
+/**
+ * Counter animation for stats
+ */
+function initCounterAnimation() {
+    const counters = document.querySelectorAll('.counter');
+
+    counters.forEach(counter => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(counter.dataset.target);
+                    let current = 0;
+                    const increment = target / 50;
+                    const duration = 1500;
+                    const stepTime = duration / 50;
+
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = target;
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(current);
+                        }
+                    }, stepTime);
+
+                    observer.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(counter);
     });
 }
 
