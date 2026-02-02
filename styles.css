@@ -3445,3 +3445,168 @@ strong {
 .proof-stat:hover .proof-number {
     transform: scale(1.05);
 }
+
+/* ============================================
+   PROCESS FLOW LINE - Animated Dots
+   ============================================ */
+.process-steps {
+    position: relative;
+}
+
+.process-flow-line {
+    position: absolute;
+    top: 95px;
+    /* Centered with the icon bubbles */
+    left: 16.67%;
+    /* Start at center of first step */
+    right: 16.67%;
+    /* End at center of last step */
+    height: 4px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.flow-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(90deg,
+            var(--color-accent) 0%,
+            rgba(0, 113, 227, 0.2) 25%,
+            rgba(0, 113, 227, 0.2) 75%,
+            var(--color-accent) 100%);
+    border-radius: 2px;
+}
+
+/* Glowing dots that travel along the line */
+.flow-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow:
+        0 0 10px var(--color-accent-glow),
+        0 0 20px var(--color-accent-glow),
+        0 0 30px rgba(0, 113, 227, 0.3);
+    z-index: 2;
+}
+
+/* First dot - travels full journey 1 → 2 → 3 */
+.flow-dot-1 {
+    animation: flowDot1 4s ease-in-out infinite;
+}
+
+@keyframes flowDot1 {
+    0% {
+        left: 0;
+        opacity: 1;
+    }
+
+    45% {
+        left: 50%;
+        opacity: 1;
+    }
+
+    50% {
+        left: 50%;
+        opacity: 1;
+    }
+
+    95% {
+        left: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+/* Second dot - delayed start */
+.flow-dot-2 {
+    animation: flowDot2 4s ease-in-out infinite;
+    animation-delay: 1.33s;
+}
+
+@keyframes flowDot2 {
+    0% {
+        left: 0;
+        opacity: 0;
+    }
+
+    5% {
+        left: 0;
+        opacity: 1;
+    }
+
+    45% {
+        left: 50%;
+        opacity: 1;
+    }
+
+    50% {
+        left: 50%;
+        opacity: 1;
+    }
+
+    95% {
+        left: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+/* Third dot - further delayed */
+.flow-dot-3 {
+    animation: flowDot3 4s ease-in-out infinite;
+    animation-delay: 2.66s;
+}
+
+@keyframes flowDot3 {
+    0% {
+        left: 0;
+        opacity: 0;
+    }
+
+    5% {
+        left: 0;
+        opacity: 1;
+    }
+
+    45% {
+        left: 50%;
+        opacity: 1;
+    }
+
+    50% {
+        left: 50%;
+        opacity: 1;
+    }
+
+    95% {
+        left: 100%;
+        opacity: 1;
+    }
+
+    100% {
+        left: 100%;
+        opacity: 0;
+    }
+}
+
+/* Hide flow line on mobile */
+@media (max-width: 768px) {
+    .process-flow-line {
+        display: none;
+    }
+}
