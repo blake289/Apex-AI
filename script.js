@@ -1,11 +1,11 @@
 /* ============================================
    APEX AI - Premium JavaScript
-   Particle mesh, cursor effects, and premium animations
+   Waveform animation, cursor effects, and premium interactions
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize all functionality
-    initParticleMesh();
+    initHeroCanvas();
     initAmbientCanvas();
     initCursorGlow();
     initFadeInAnimations();
@@ -16,146 +16,96 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /**
- * Particle mesh network animation for hero
- * Creates connected nodes that form neural pathway patterns
+ * Hero waveform animation - flowing frequency lines
  */
-function initParticleMesh() {
+function initHeroCanvas() {
     const canvas = document.getElementById('particle-canvas');
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     let animationId;
-    let particles = [];
-    let mouse = { x: null, y: null, radius: 150 };
+    let time = 0;
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        initParticles();
     }
 
-    function initParticles() {
-        particles = [];
-        const numParticles = Math.min(Math.floor((canvas.width * canvas.height) / 15000), 80);
+    function drawWave(yOffset, amplitude, frequency, speed, color, lineWidth) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
 
-        for (let i = 0; i < numParticles; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                baseX: Math.random() * canvas.width,
-                baseY: Math.random() * canvas.height,
-                size: Math.random() * 2 + 1,
-                speedX: (Math.random() - 0.5) * 0.3,
-                speedY: (Math.random() - 0.5) * 0.3,
-                opacity: Math.random() * 0.5 + 0.2
-            });
+        for (let x = 0; x <= canvas.width; x += 2) {
+            const y = yOffset +
+                Math.sin((x * frequency) + (time * speed)) * amplitude +
+                Math.sin((x * frequency * 0.5) + (time * speed * 0.7)) * (amplitude * 0.5);
+
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
         }
+
+        ctx.stroke();
     }
 
     function drawParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const particleCount = Math.floor(canvas.width / 50);
 
-        // Draw connections
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
+        for (let i = 0; i < particleCount; i++) {
+            const x = (i / particleCount) * canvas.width + Math.sin(time * 0.5 + i) * 30;
+            const y = canvas.height * 0.3 + Math.sin(time * 0.3 + i * 0.5) * 100;
+            const size = 1 + Math.sin(time + i) * 0.5;
+            const alpha = 0.2 + Math.sin(time * 0.5 + i) * 0.15;
 
-                if (distance < 150) {
-                    const opacity = (1 - distance / 150) * 0.15;
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(0, 113, 227, ${opacity})`;
-                    ctx.lineWidth = 1;
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
-            }
+            ctx.beginPath();
+            ctx.arc(x, y, size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 113, 227, ${alpha})`;
+            ctx.fill();
         }
-
-        // Draw particles
-        particles.forEach(particle => {
-            ctx.beginPath();
-            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 113, 227, ${particle.opacity})`;
-            ctx.fill();
-
-            // Glow effect
-            const gradient = ctx.createRadialGradient(
-                particle.x, particle.y, 0,
-                particle.x, particle.y, particle.size * 3
-            );
-            gradient.addColorStop(0, `rgba(0, 113, 227, ${particle.opacity * 0.3})`);
-            gradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    }
-
-    function updateParticles() {
-        particles.forEach(particle => {
-            // Floating movement
-            particle.x += particle.speedX;
-            particle.y += particle.speedY;
-
-            // Mouse interaction
-            if (mouse.x !== null && mouse.y !== null) {
-                const dx = mouse.x - particle.x;
-                const dy = mouse.y - particle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < mouse.radius) {
-                    const force = (mouse.radius - distance) / mouse.radius;
-                    particle.x -= dx * force * 0.02;
-                    particle.y -= dy * force * 0.02;
-                }
-            }
-
-            // Bounce off edges with padding
-            if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-            if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-
-            // Keep in bounds
-            particle.x = Math.max(0, Math.min(canvas.width, particle.x));
-            particle.y = Math.max(0, Math.min(canvas.height, particle.y));
-        });
     }
 
     function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw multiple wave layers with slightly faster speeds
+        drawWave(canvas.height * 0.5, 60, 0.003, 1.0, 'rgba(0, 113, 227, 0.15)', 2);
+        drawWave(canvas.height * 0.55, 40, 0.004, 1.2, 'rgba(0, 113, 227, 0.12)', 1.5);
+        drawWave(canvas.height * 0.6, 80, 0.002, 0.8, 'rgba(0, 198, 255, 0.08)', 2.5);
+        drawWave(canvas.height * 0.45, 30, 0.005, 1.4, 'rgba(124, 58, 237, 0.1)', 1);
+
+        // Draw floating particles
         drawParticles();
-        updateParticles();
+
+        // Draw gradient glow at center
+        const gradient = ctx.createRadialGradient(
+            canvas.width / 2, canvas.height * 0.4, 0,
+            canvas.width / 2, canvas.height * 0.4, canvas.width * 0.4
+        );
+        gradient.addColorStop(0, 'rgba(0, 113, 227, 0.08)');
+        gradient.addColorStop(0.5, 'rgba(0, 113, 227, 0.03)');
+        gradient.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        time += 0.022;
         animationId = requestAnimationFrame(animate);
     }
-
-    // Mouse tracking
-    canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
-    });
-
-    canvas.addEventListener('mouseleave', () => {
-        mouse.x = null;
-        mouse.y = null;
-    });
 
     // Handle resize
     window.addEventListener('resize', debounce(resize, 250));
     resize();
 
-    // Visibility optimization
+    // Pause animation when not visible
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 if (!animationId) animate();
             } else {
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                }
+                cancelAnimationFrame(animationId);
+                animationId = null;
             }
         });
     });
@@ -209,11 +159,11 @@ function initAmbientCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw flowing lines
-            drawWave(canvas.height * 0.3, 40, 0.003, 0.4, 'rgba(0, 113, 227, 0.08)', 1.5);
-            drawWave(canvas.height * 0.5, 60, 0.002, 0.3, 'rgba(0, 113, 227, 0.06)', 2);
-            drawWave(canvas.height * 0.7, 35, 0.004, 0.5, 'rgba(124, 58, 237, 0.05)', 1.5);
+            drawWave(canvas.height * 0.3, 40, 0.003, 0.5, 'rgba(0, 113, 227, 0.08)', 1.5);
+            drawWave(canvas.height * 0.5, 60, 0.002, 0.4, 'rgba(0, 113, 227, 0.06)', 2);
+            drawWave(canvas.height * 0.7, 35, 0.004, 0.6, 'rgba(124, 58, 237, 0.05)', 1.5);
 
-            time += 0.008;
+            time += 0.012;
             animationId = requestAnimationFrame(animate);
         }
 
@@ -238,7 +188,7 @@ function initAmbientCanvas() {
 }
 
 /**
- * Cursor glow effect that follows mouse
+ * Cursor glow effect with particle trails
  */
 function initCursorGlow() {
     const glow = document.getElementById('cursor-glow');
@@ -251,19 +201,95 @@ function initCursorGlow() {
     let mouseY = 0;
     let currentX = 0;
     let currentY = 0;
+    let velocity = 0;
+    let lastX = 0;
+    let lastY = 0;
+
+    // Create particle trail container
+    const trailContainer = document.createElement('div');
+    trailContainer.className = 'cursor-trail-container';
+    trailContainer.style.cssText = 'position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;';
+    document.body.appendChild(trailContainer);
+
+    const particles = [];
+    const maxParticles = 20;
+
+    class TrailParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 4 + 2;
+            this.alpha = 0.6;
+            this.decay = Math.random() * 0.02 + 0.015;
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = (Math.random() - 0.5) * 2;
+
+            this.element = document.createElement('div');
+            this.element.style.cssText = `
+                position: fixed;
+                width: ${this.size}px;
+                height: ${this.size}px;
+                background: radial-gradient(circle, rgba(0, 113, 227, 0.6) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                left: ${x}px;
+                top: ${y}px;
+                transform: translate(-50%, -50%);
+            `;
+            trailContainer.appendChild(this.element);
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= this.decay;
+            this.element.style.left = this.x + 'px';
+            this.element.style.top = this.y + 'px';
+            this.element.style.opacity = this.alpha;
+            return this.alpha > 0;
+        }
+
+        destroy() {
+            this.element.remove();
+        }
+    }
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        // Calculate velocity
+        velocity = Math.sqrt(
+            Math.pow(mouseX - lastX, 2) +
+            Math.pow(mouseY - lastY, 2)
+        );
+        lastX = mouseX;
+        lastY = mouseY;
+
+        // Spawn particles based on velocity
+        if (velocity > 5 && particles.length < maxParticles) {
+            particles.push(new TrailParticle(mouseX, mouseY));
+        }
     });
 
     function animate() {
         // Smooth follow
-        currentX += (mouseX - currentX) * 0.1;
-        currentY += (mouseY - currentY) * 0.1;
+        currentX += (mouseX - currentX) * 0.12;
+        currentY += (mouseY - currentY) * 0.12;
 
+        // Dynamic size based on velocity
+        const scale = Math.min(1 + velocity * 0.01, 1.5);
         glow.style.left = currentX + 'px';
         glow.style.top = currentY + 'px';
+        glow.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
+        // Update particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+            if (!particles[i].update()) {
+                particles[i].destroy();
+                particles.splice(i, 1);
+            }
+        }
 
         requestAnimationFrame(animate);
     }
@@ -306,31 +332,45 @@ function initFadeInAnimations() {
 }
 
 /**
- * Counter animation for stats
+ * Counter animation for stats with easing
  */
 function initCounterAnimation() {
     const counters = document.querySelectorAll('.counter');
+
+    // Easing function for smooth animation
+    function easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+    }
 
     counters.forEach(counter => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const target = parseInt(counter.dataset.target);
-                    let current = 0;
-                    const increment = target / 50;
-                    const duration = 1500;
-                    const stepTime = duration / 50;
+                    const duration = 2000; // 2 seconds
+                    const startTime = performance.now();
 
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            counter.textContent = target;
-                            clearInterval(timer);
+                    function updateCounter(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easedProgress = easeOutQuart(progress);
+                        const current = Math.floor(target * easedProgress);
+
+                        counter.textContent = current;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(updateCounter);
                         } else {
-                            counter.textContent = Math.floor(current);
+                            counter.textContent = target;
+                            // Add a subtle pulse effect when complete
+                            counter.style.transform = 'scale(1.05)';
+                            setTimeout(() => {
+                                counter.style.transform = 'scale(1)';
+                            }, 150);
                         }
-                    }, stepTime);
+                    }
 
+                    requestAnimationFrame(updateCounter);
                     observer.unobserve(counter);
                 }
             });
