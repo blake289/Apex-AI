@@ -3098,3 +3098,350 @@ strong {
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, #a1a1a6 0%, #86868b 100%);
 }
+
+/* ============================================
+   SECTION BACKGROUND ALTERNATION
+   ============================================ */
+
+/* Problem section - white background */
+.section-problem {
+    background: var(--color-bg-white);
+}
+
+/* Solution section - light gray */
+.section-solution {
+    background: var(--color-bg-warm);
+}
+
+/* AI Systems / Features - white */
+.section-features {
+    background: var(--color-bg-white);
+}
+
+/* How It Works - light gray */
+.section-process {
+    background: var(--color-bg-warm);
+}
+
+/* Testimonials - white */
+.section-testimonials {
+    background: var(--color-bg-white);
+}
+
+/* Who We Serve - light gray */
+.section-clients {
+    background: var(--color-bg-warm);
+}
+
+/* FAQ - white */
+.section-faq {
+    background: var(--color-bg-white);
+}
+
+/* ============================================
+   ENHANCED TRUST BADGES
+   ============================================ */
+.trust-badges {
+    padding: 24px 0;
+    margin-top: 48px;
+    background: linear-gradient(135deg, rgba(0, 113, 227, 0.03) 0%, rgba(124, 58, 237, 0.02) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 113, 227, 0.08);
+}
+
+.trust-badge {
+    padding: 14px 24px;
+    background: var(--color-bg-white);
+    border: 1px solid rgba(0, 113, 227, 0.12);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.trust-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.12);
+}
+
+.badge-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-accent);
+    stroke-width: 2;
+}
+
+/* ============================================
+   ENHANCED FOOTER
+   ============================================ */
+.footer {
+    padding: 100px 0 50px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, #0a0a0b 0%, #050507 100%);
+}
+
+.footer-grid {
+    padding-bottom: 60px;
+}
+
+.footer-bottom {
+    padding-top: 40px;
+}
+
+/* ============================================
+   CTA BUTTON GLOW ANIMATION
+   ============================================ */
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        box-shadow:
+            0 4px 20px rgba(0, 113, 227, 0.3),
+            0 0 40px rgba(0, 113, 227, 0.15);
+    }
+
+    50% {
+        box-shadow:
+            0 8px 40px rgba(0, 113, 227, 0.5),
+            0 0 80px rgba(0, 113, 227, 0.25);
+    }
+}
+
+.btn-cta-glow {
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+.btn-cta-glow:hover {
+    animation: none;
+    box-shadow:
+        0 12px 60px rgba(0, 113, 227, 0.6),
+        0 0 100px rgba(0, 113, 227, 0.3);
+}
+
+/* ============================================
+   ENHANCED HOVER STATES
+   ============================================ */
+
+/* All cards enhanced lift */
+.card-hover-lift {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease;
+}
+
+.card-hover-lift:hover {
+    transform: translateY(-10px);
+}
+
+/* Testimonial card enhanced */
+.testimonial-card {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+        var(--shadow-xl),
+        0 0 40px rgba(0, 113, 227, 0.08);
+}
+
+/* Feature card "Most Popular" glow */
+.feature-card:has(.feature-tag) {
+    background: linear-gradient(135deg, #ffffff 0%, #fefcf3 100%);
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.feature-card:has(.feature-tag)::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* ============================================
+   SECTION TRANSITION OVERLAYS
+   ============================================ */
+
+/* Subtle gradient at section edges */
+.section-problem::after,
+.section-features::after,
+.section-process::after,
+.section-clients::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(0, 113, 227, 0.1) 20%,
+            rgba(0, 113, 227, 0.1) 80%,
+            transparent);
+}
+
+/* ============================================
+   FINAL CTA SECTION AURORA EFFECT
+   ============================================ */
+.section-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0, 113, 227, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 30% at 50% 50%, rgba(0, 198, 255, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    animation: auroraShift 15s ease-in-out infinite;
+}
+
+@keyframes auroraShift {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* CTA section enhanced button */
+.cta-btn {
+    position: relative;
+    z-index: 10;
+}
+
+/* ============================================
+   PROBLEM SECTION X MARKS ANIMATION
+   ============================================ */
+.icon-x {
+    animation: xPulse 3s ease-in-out infinite;
+}
+
+@keyframes xPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    }
+}
+
+.problem-card:hover .icon-x {
+    animation: none;
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+}
+
+/* ============================================
+   CONNECTING LINES FOR HOW IT WORKS
+   ============================================ */
+.step-connector {
+    top: 55px;
+    right: -50%;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg,
+            var(--color-accent) 0%,
+            rgba(0, 113, 227, 0.3) 50%,
+            var(--color-accent) 100%);
+    z-index: 1;
+}
+
+.step-connector::before,
+.step-connector::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.step-connector::before {
+    left: 0;
+}
+
+.step-connector::after {
+    right: 0;
+}
+
+/* Animated dot on connector */
+.step-connector .connector-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 15px var(--color-accent-glow);
+    animation: dotMove 3s ease-in-out infinite;
+}
+
+@keyframes dotMove {
+
+    0%,
+    100% {
+        left: 0;
+    }
+
+    50% {
+        left: calc(100% - 12px);
+    }
+}
+
+/* ============================================
+   FAQ CHEVRON ANIMATION
+   ============================================ */
+.faq-icon {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-question:hover .faq-icon {
+    transform: scale(1.1);
+}
+
+.faq-item.active .faq-question:hover .faq-icon {
+    transform: rotate(45deg) scale(1.1);
+}
+
+/* ============================================
+   SOCIAL PROOF BAR ENHANCED
+   ============================================ */
+.social-proof-bar {
+    background: linear-gradient(135deg,
+            rgba(0, 113, 227, 0.06) 0%,
+            rgba(124, 58, 237, 0.03) 100%);
+    border: 1px solid rgba(0, 113, 227, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+}
+
+.proof-stat {
+    position: relative;
+}
+
+.proof-number {
+    transition: transform 0.3s ease;
+}
+
+.proof-stat:hover .proof-number {
+    transform: scale(1.05);
+}
