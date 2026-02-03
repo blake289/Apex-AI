@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initCounterAnimation();
     initFAQAccordion();
     initScrollSpy();
+    initChatbot();
 });
 
 /**
@@ -546,4 +547,62 @@ function initScrollSpy() {
 
     window.addEventListener('scroll', debounce(updateActiveNav, 50));
     updateActiveNav();
+}
+
+/**
+ * Chatbot widget toggle and form handling
+ */
+function initChatbot() {
+    const widget = document.getElementById('chatbot-widget');
+    const toggle = document.getElementById('chatbot-toggle');
+    const panel = document.getElementById('chatbot-panel');
+    const chatForm = document.getElementById('chatbot-form');
+    const contactForm = document.getElementById('contact-form');
+
+    if (!widget || !toggle) return;
+
+    // Toggle chatbot panel
+    toggle.addEventListener('click', () => {
+        widget.classList.toggle('open');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+        if (widget.classList.contains('open') &&
+            !widget.contains(e.target)) {
+            widget.classList.remove('open');
+        }
+    });
+
+    // Handle chatbot form submit
+    if (chatForm) {
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(chatForm);
+            console.log('Chatbot form submitted:', Object.fromEntries(formData));
+
+            // Show success message
+            const body = document.querySelector('.chatbot-body');
+            body.innerHTML = `
+                <div class="chat-message bot-message">
+                    <p>✅ Thanks! We'll text you shortly.</p>
+                </div>
+            `;
+        });
+    }
+
+    // Handle contact form submit
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(contactForm);
+            console.log('Contact form submitted:', Object.fromEntries(formData));
+
+            // Show success message
+            const button = contactForm.querySelector('button');
+            button.innerHTML = '<span>✅ We\'ll text you shortly!</span>';
+            button.disabled = true;
+            button.style.opacity = '0.8';
+        });
+    }
 }
