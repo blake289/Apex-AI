@@ -488,13 +488,17 @@ strong {
    ============================================ */
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: calc(100vh - 72px);
+    max-height: 900px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 120px 0;
+    padding: 96px 0 112px;
     overflow: hidden;
-    background: linear-gradient(170deg, #0a0a0f 0%, #0f1419 50%, #0a1628 100%);
+    background: #050814;
+    background-image:
+        radial-gradient(900px 600px at 50% 35%, rgba(20, 90, 255, 0.18) 0%, transparent 60%),
+        radial-gradient(900px 600px at 80% 80%, rgba(120, 70, 255, 0.16) 0%, transparent 55%);
 }
 
 @media (max-width: 768px) {
@@ -549,22 +553,18 @@ strong {
 }
 
 .hero-gradient-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse 80% 50% at 50% 30%, rgba(0, 113, 227, 0.06) 0%, transparent 60%);
-    z-index: 3;
+    display: none;
+    /* Gradients now in hero base */
 }
 
 .hero-content {
     position: relative;
     z-index: 4;
     text-align: center;
-    max-width: 760px;
+    max-width: 880px;
     margin: 0 auto;
-    color: #ffffff;
+    color: #F8FAFC;
+    padding: 0 20px;
 }
 
 .hero-badge {
@@ -609,9 +609,9 @@ strong {
     font-size: 64px;
     font-weight: 600;
     margin-bottom: 24px;
-    line-height: 1.1;
+    line-height: 1.05;
     letter-spacing: -0.03em;
-    color: #ffffff;
+    color: #F8FAFC;
 }
 
 @media (max-width: 768px) {
@@ -621,22 +621,31 @@ strong {
     }
 }
 
+.hero-headline-sub {
+    display: block;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.62);
+    margin-top: 8px;
+}
+
+/* Legacy emphasis class */
 .hero-headline-emphasis {
     display: block;
     font-weight: 500;
-    opacity: 0.65;
+    color: rgba(248, 250, 252, 0.62);
     margin-top: 8px;
 }
 
 .hero-subheadline {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 48px;
-    max-width: 600px;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.86);
+    margin-bottom: 32px;
+    max-width: 720px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
-    font-weight: 400;
+    letter-spacing: -0.01em;
 }
 
 @media (max-width: 768px) {
@@ -646,19 +655,13 @@ strong {
     }
 }
 
-/* Hero CTA - Premium Treatment */
+/* Hero CTA - Clean, dominant */
 .hero-cta-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-    /* Subtle glassmorphism backdrop for premium depth */
-    padding: 32px 40px;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 0;
+    margin-bottom: 16px;
 }
 
 
@@ -666,27 +669,52 @@ strong {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     height: 56px;
-    padding: 0 32px;
-    font-size: 17px;
+    padding: 0 28px;
+    min-width: 320px;
+    font-size: 16px;
     font-weight: 600;
+    letter-spacing: -0.01em;
     color: #ffffff;
     background: #0A84FF;
     border-radius: 14px;
     border: none;
     text-decoration: none;
     cursor: pointer;
-    box-shadow: 0 12px 24px rgba(10, 132, 255, 0.35);
-    transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+    box-shadow: 0 16px 40px rgba(10, 132, 255, 0.28);
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 180ms ease-out;
+}
+
+.btn-hero-primary .btn-icon {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
 }
 
 .btn-hero-primary:hover {
-    transform: scale(1.02);
-    box-shadow: 0 16px 32px rgba(10, 132, 255, 0.25);
+    background: #2B95FF;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 52px rgba(10, 132, 255, 0.34);
 }
 
 .btn-hero-primary:active {
-    transform: scale(0.98);
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 12px 28px rgba(10, 132, 255, 0.22);
+}
+
+.btn-hero-primary:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+    .btn-hero-primary {
+        width: 100%;
+        min-width: unset;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -701,9 +729,52 @@ strong {
 
 .hero-microcopy {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.5);
-    font-weight: 400;
-    margin: 0;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.70);
+    margin: 16px 0 0 0;
+    line-height: 1.4;
+}
+
+/* Trust line */
+.hero-trust-line {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.62);
+    margin: 16px 0 0 0;
+}
+
+/* Objection pills */
+.hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.hero-pill {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(248, 250, 252, 0.12);
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(248, 250, 252, 0.74);
+}
+
+@media (max-width: 768px) {
+    .hero-pills {
+        gap: 8px;
+    }
+
+    .hero-pill {
+        font-size: 12px;
+        height: 28px;
+        padding: 0 10px;
+    }
 }
 
 /* Legacy hero elements - hidden */
@@ -2669,6 +2740,48 @@ strong {
 .fade-in.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Hero staggered load animation */
+.hero-animate {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-animate[data-delay="0"] {
+    transition-delay: 0ms;
+}
+
+.hero-animate[data-delay="1"] {
+    transform: translateY(14px);
+    transition-duration: 650ms;
+    transition-delay: 90ms;
+}
+
+.hero-animate[data-delay="2"] {
+    transform: translateY(10px) scale(0.98);
+    transition-duration: 600ms;
+    transition-delay: 170ms;
+}
+
+.hero-animate[data-delay="3"] {
+    transition-duration: 500ms;
+    transition-delay: 240ms;
+}
+
+.hero-animate.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-animate {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 /* ============================================

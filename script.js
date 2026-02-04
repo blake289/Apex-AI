@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize all functionality
+    initHeroAnimations();
     initHeroCanvas();
     initAmbientCanvas();
     initCursorGlow();
@@ -17,6 +18,24 @@ document.addEventListener('DOMContentLoaded', function () {
     initScrollSpy();
     initChatbot();
 });
+
+/**
+ * Hero staggered load animations
+ * Triggers sequential fade-in of hero elements
+ */
+function initHeroAnimations() {
+    const heroElements = document.querySelectorAll('.hero-animate');
+    if (!heroElements.length) return;
+
+    // Trigger animations after a short delay for paint
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            heroElements.forEach(el => {
+                el.classList.add('visible');
+            });
+        }, 50);
+    });
+}
 
 /**
  * Hero waveform animation - flowing frequency lines
