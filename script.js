@@ -17,7 +17,34 @@ document.addEventListener('DOMContentLoaded', function () {
     initFAQAccordion();
     initScrollSpy();
     initChatbot();
+    initHeaderScroll();
 });
+
+/**
+ * Header scroll effect - adds scrolled class for styling
+ */
+function initHeaderScroll() {
+    const header = document.querySelector('.header');
+    if (!header) return;
+
+    let lastScroll = 0;
+    const scrollThreshold = 50;
+
+    function updateHeader() {
+        const currentScroll = window.scrollY;
+
+        if (currentScroll > scrollThreshold) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+
+        lastScroll = currentScroll;
+    }
+
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader(); // Initial check
+}
 
 /**
  * Hero staggered load animations
@@ -82,8 +109,8 @@ function initHeroCanvas() {
             const alpha = 0.2 + Math.sin(time * 0.5 + i) * 0.15;
 
             ctx.beginPath();
-            ctx.arc(x, y, size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(0, 113, 227, ${alpha})`;
+            ctx.arc(x, y, size * 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 113, 227, ${alpha + 0.15})`;
             ctx.fill();
         }
     }
@@ -91,11 +118,11 @@ function initHeroCanvas() {
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw multiple wave layers with slightly faster speeds
-        drawWave(canvas.height * 0.5, 60, 0.003, 1.0, 'rgba(0, 113, 227, 0.25)', 2);
-        drawWave(canvas.height * 0.55, 40, 0.004, 1.2, 'rgba(0, 113, 227, 0.2)', 1.5);
-        drawWave(canvas.height * 0.6, 80, 0.002, 0.8, 'rgba(0, 198, 255, 0.15)', 2.5);
-        drawWave(canvas.height * 0.45, 30, 0.005, 1.4, 'rgba(124, 58, 237, 0.18)', 1);
+        // Draw multiple wave layers - more visible
+        drawWave(canvas.height * 0.5, 70, 0.003, 1.0, 'rgba(0, 113, 227, 0.45)', 2.5);
+        drawWave(canvas.height * 0.55, 50, 0.004, 1.2, 'rgba(0, 113, 227, 0.35)', 2);
+        drawWave(canvas.height * 0.6, 90, 0.002, 0.8, 'rgba(0, 198, 255, 0.3)', 3);
+        drawWave(canvas.height * 0.45, 35, 0.005, 1.4, 'rgba(124, 58, 237, 0.35)', 1.5);
 
         // Draw floating particles
         drawParticles();
@@ -105,8 +132,8 @@ function initHeroCanvas() {
             canvas.width / 2, canvas.height * 0.4, 0,
             canvas.width / 2, canvas.height * 0.4, canvas.width * 0.4
         );
-        gradient.addColorStop(0, 'rgba(0, 113, 227, 0.08)');
-        gradient.addColorStop(0.5, 'rgba(0, 113, 227, 0.03)');
+        gradient.addColorStop(0, 'rgba(0, 113, 227, 0.18)');
+        gradient.addColorStop(0.5, 'rgba(0, 113, 227, 0.08)');
         gradient.addColorStop(1, 'transparent');
 
         ctx.fillStyle = gradient;
