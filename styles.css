@@ -1388,30 +1388,59 @@ strong {
 /* ============================================
    HOW IT WORKS
    ============================================ */
+/* ============================================
+   HOW IT WORKS / PROCESS SECTION
+   ============================================ */
 .section-process {
     background: var(--color-bg-white);
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle centered glow behind headline */
+.section-process::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(0, 113, 227, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Top divider line */
+.section-process::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+    pointer-events: none;
 }
 
 .process-steps {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-top: 60px;
-    margin-bottom: 48px;
+    gap: 48px;
+    margin-top: 72px;
+    margin-bottom: 64px;
+    position: relative;
+    z-index: 1;
 }
 
 .process-step {
     position: relative;
     text-align: center;
-    padding: 0 20px;
+    padding: 0 16px;
 }
 
 .step-connector {
-    display: none;
-}
-
-.process-step:last-child .step-connector {
     display: none;
 }
 
@@ -1420,115 +1449,121 @@ strong {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
 }
 
 .step-number {
-    font-size: 28px;
-    font-weight: var(--font-weight-bold);
+    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
     color: var(--color-accent);
     margin-bottom: 16px;
-    letter-spacing: 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.step-number::before {
+    content: 'Step ';
 }
 
 .step-icon-bg {
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--gradient-primary);
-    border-radius: 50%;
+    background: var(--color-accent);
+    border-radius: 20px;
     color: #ffffff;
     position: relative;
     z-index: 2;
-    box-shadow: 0 8px 24px rgba(0, 113, 227, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.2);
+    transition: all var(--transition-normal);
 }
 
 .process-step:hover .step-icon-bg {
-    transform: scale(1.08);
-    box-shadow: 0 12px 32px rgba(0, 113, 227, 0.4);
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 113, 227, 0.3);
 }
 
 .step-icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
 }
 
-.orbit-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 94px;
-    height: 94px;
-    border: 1px dashed var(--color-accent-soft);
-    border-radius: 50%;
-    animation: orbitSpin 20s linear infinite;
-}
-
-@keyframes orbitSpin {
-    from {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
+/* Hide orbit animations for cleaner look */
+.orbit-ring,
 .orbit-dot {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 8px;
-    height: 8px;
-    background: var(--color-accent);
-    border-radius: 50%;
-    box-shadow: 0 0 10px var(--color-accent-glow);
+    display: none;
 }
 
 .step-content {
-    max-width: 280px;
+    max-width: 260px;
     margin: 0 auto;
 }
 
 .step-title {
-    font-size: 24px;
-    margin-bottom: 12px;
+    font-size: 22px;
+    margin-bottom: 10px;
     font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    letter-spacing: -0.02em;
 }
 
 .step-desc {
     font-size: 15px;
+    line-height: 1.6;
     color: var(--color-text-secondary);
     margin-bottom: 0;
 }
 
-.process-promise {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
+/* Hide animated flow line for cleaner design */
+.process-flow-line {
+    display: none;
 }
 
-.process-promise span {
+/* Assurance Row - Premium guarantees */
+.process-assurance {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 24px 0;
+}
+
+.assurance-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    background: rgba(0, 113, 227, 0.08);
+    gap: 10px;
+    padding: 14px 24px;
+    background: var(--color-bg-soft);
     border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-subtle);
     font-size: 15px;
     font-weight: var(--font-weight-medium);
     color: var(--color-text);
+    transition: all var(--transition-fast);
+}
+
+.assurance-item:hover {
+    background: var(--color-bg-white);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+
+.assurance-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-success);
+    flex-shrink: 0;
+}
+
+/* Legacy classes - keep for compatibility */
+.process-promise {
+    display: none;
 }
 
 .check-icon {
-    color: var(--color-success);
-    font-weight: bold;
+    display: none;
 }
 
 /* ============================================
