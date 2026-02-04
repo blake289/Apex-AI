@@ -484,17 +484,24 @@ strong {
 }
 
 /* ============================================
-   HERO SECTION
+   HERO SECTION - Apple HIG Compliant
    ============================================ */
 .hero {
     position: relative;
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding-top: 120px;
-    padding-bottom: 80px;
+    justify-content: center;
+    padding: 120px 0;
     overflow: hidden;
-    background: linear-gradient(180deg, #0a0a0b 0%, #0f172a 100%);
+    background: linear-gradient(170deg, #0a0a0f 0%, #0f1419 50%, #0a1628 100%);
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 140px 0 80px;
+        min-height: auto;
+    }
 }
 
 .hero-canvas {
@@ -506,17 +513,20 @@ strong {
     z-index: 1;
 }
 
-.hero-orb {
+/* Dark scrim overlay for WCAG AA contrast */
+.hero-scrim {
     position: absolute;
-    top: 20%;
-    right: 10%;
-    width: 500px;
-    height: 500px;
-    background: var(--gradient-orb);
-    border-radius: 50%;
-    filter: blur(80px);
-    animation: orbFloat 15s ease-in-out infinite;
-    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 2;
+}
+
+/* Legacy - hidden */
+.hero-orb {
+    display: none;
 }
 
 @keyframes orbFloat {
@@ -544,15 +554,15 @@ strong {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse 80% 50% at 50% 30%, rgba(0, 113, 227, 0.12) 0%, transparent 60%);
-    z-index: 2;
+    background: radial-gradient(ellipse 80% 50% at 50% 30%, rgba(0, 113, 227, 0.06) 0%, transparent 60%);
+    z-index: 3;
 }
 
 .hero-content {
     position: relative;
-    z-index: 3;
+    z-index: 4;
     text-align: center;
-    max-width: 900px;
+    max-width: 760px;
     margin: 0 auto;
     color: #ffffff;
 }
@@ -596,46 +606,113 @@ strong {
 }
 
 .hero-headline {
-    font-size: clamp(44px, 8vw, 80px);
-    font-weight: var(--font-weight-bold);
+    font-size: 64px;
+    font-weight: 600;
     margin-bottom: 24px;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .hero-headline {
+        font-size: 38px;
+        line-height: 1.15;
+    }
+}
+
+.hero-headline-emphasis {
+    display: block;
+    font-weight: 500;
+    opacity: 0.65;
+    margin-top: 8px;
 }
 
 .hero-subheadline {
-    font-size: clamp(17px, 2vw, 20px);
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 20px;
-    max-width: 680px;
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 48px;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    line-height: 1.65;
-    font-weight: var(--font-weight-regular);
+    line-height: 1.6;
+    font-weight: 400;
 }
 
-.hero-supporting {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.45);
-    margin-bottom: 44px;
-    font-style: italic;
-    font-weight: var(--font-weight-regular);
+@media (max-width: 768px) {
+    .hero-subheadline {
+        font-size: 17px;
+        margin-bottom: 40px;
+    }
 }
 
-.hero-ctas {
+/* Hero CTA - Premium Treatment */
+.hero-cta-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 64px;
+    gap: 16px;
+    /* Subtle glassmorphism backdrop for premium depth */
+    padding: 32px 40px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.hero-ctas .btn-text {
-    color: rgba(255, 255, 255, 0.65);
-}
 
-.hero-ctas .btn-text:hover {
+.btn-hero-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    padding: 0 32px;
+    font-size: 17px;
+    font-weight: 600;
     color: #ffffff;
+    background: #0A84FF;
+    border-radius: 14px;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 12px 24px rgba(10, 132, 255, 0.35);
+    transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.btn-hero-primary:hover {
+    transform: scale(1.02);
+    box-shadow: 0 16px 32px rgba(10, 132, 255, 0.25);
+}
+
+.btn-hero-primary:active {
+    transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-hero-primary {
+        transition: none;
+    }
+
+    .btn-hero-primary:hover {
+        transform: none;
+    }
+}
+
+.hero-microcopy {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Legacy hero elements - hidden */
+.hero-supporting,
+.hero-ctas,
+.hero-stats,
+.hero-badge,
+.badge-pulse {
+    display: none;
 }
 
 .hero-stats {
@@ -1461,27 +1538,27 @@ strong {
     text-align: center;
     padding: 0 16px;
     opacity: 0;
-    transform: scale(0.97) translateY(6px);
-    transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+    transform: translateY(40px);
+    transition: opacity 0.85s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.85s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-/* Staggered reveal: left to right */
+/* Staggered reveal: left to right - more dramatic timing */
 .section-process.in-view .process-step:nth-child(1) {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    transition-delay: 0.1s;
+    transform: translateY(0);
+    transition-delay: 0.15s;
 }
 
 .section-process.in-view .process-step:nth-child(2) {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    transition-delay: 0.22s;
+    transform: translateY(0);
+    transition-delay: 0.35s;
 }
 
 .section-process.in-view .process-step:nth-child(3) {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    transition-delay: 0.34s;
+    transform: translateY(0);
+    transition-delay: 0.55s;
 }
 
 .step-connector {
@@ -2666,9 +2743,7 @@ strong {
         padding-bottom: 100px;
     }
 
-    .hero-headline {
-        font-size: 44px;
-    }
+    /* Hero Mobile - Apple HIG */
 
     .hero-orb {
         width: 300px;
@@ -2931,9 +3006,7 @@ strong {
         padding: 0 20px;
     }
 
-    .hero-headline {
-        font-size: 36px;
-    }
+    /* Hero headline controlled by main styles */
 
     .hero-badge {
         font-size: 12px;
